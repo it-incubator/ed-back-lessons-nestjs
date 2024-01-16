@@ -21,7 +21,7 @@ export class User {
     this.name = name;
   }
 
-  static createUser(name: string, email: string | null): UserDocument {
+  static createUser(name: string, email: string | null) {
     const user = new this();
 
     user.name = name;

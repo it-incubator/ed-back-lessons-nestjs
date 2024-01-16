@@ -22,6 +22,11 @@ import { AuthGuard } from '../../../infrastructure/guards/auth.guard';
 import { Request, Response } from 'express';
 import { IsNumber } from 'class-validator';
 
+class DeleteUserParams {
+  @IsNumber()
+  id: number;
+}
+
 // Tag для swagger
 @ApiTags('Users')
 @Controller('users')
@@ -59,7 +64,7 @@ export class UsersController {
       createModel.name,
     );
 
-    return await this.usersQueryRepository.getById(result.id);
+    return await this.usersQueryRepository.getById(result);
   }
 
   // :id в декораторе говорит nest о том что это параметр
@@ -72,9 +77,4 @@ export class UsersController {
   async delete(@Param() params: DeleteUserParams) {
     return params.id;
   }
-}
-
-class DeleteUserParams {
-  @IsNumber()
-  id: number;
 }

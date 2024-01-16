@@ -7,8 +7,12 @@ import { User, UserDocument } from '../domain/user.entity';
 export class UsersRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  public async insert(user: User) {
-    const result: UserDocument[] = await this.userModel.insertMany(user);
+  public async insert(user: {
+    email: string;
+    name: string;
+    createdAt: string;
+  }) {
+    const result = await this.userModel.insertMany(user);
     return result[0];
   }
 
