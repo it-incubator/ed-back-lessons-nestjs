@@ -1,9 +1,12 @@
-import {Injectable} from '@nestjs/common';
-import {User, UserDocument} from "../domain/user.entity";
-import {Model} from "mongoose";
-import {InjectModel} from "@nestjs/mongoose";
-import {UserOutputModel, UserOutputModelMapper} from "../api/models/output/user.output.model";
-import {UsersRepository} from "./users.repository";
+import { Injectable } from '@nestjs/common';
+import { User, UserDocument } from '../domain/user.entity';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import {
+  UserOutputModel,
+  UserOutputModelMapper,
+} from '../api/models/output/user.output.model';
+import { UsersRepository } from './users.repository';
 
 // export abstract class BaseQueryRepository<M> {
 //     protected constructor(private model: Model<M>) {
@@ -19,13 +22,10 @@ import {UsersRepository} from "./users.repository";
 
 @Injectable()
 export class UsersQueryRepository {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {
-    }
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-    public async getById(userId: string): Promise<UserOutputModel> {
-        const user = await this.userModel.findById(userId, {__v: false})
-        return UserOutputModelMapper(user);
-    }
+  public async getById(userId: string): Promise<UserOutputModel> {
+    const user = await this.userModel.findById(userId, { __v: false });
+    return UserOutputModelMapper(user);
+  }
 }
-
-
