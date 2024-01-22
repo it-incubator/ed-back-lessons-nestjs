@@ -12,7 +12,7 @@ import { UsersQueryRepository } from './features/users/infrastructure/users.quer
 import { User, UserSchema } from './features/users/domain/user.entity';
 import { UsersController } from './features/users/api/users.controller';
 import { LoggerMiddleware } from './infrastructure/middlewares/logger.middleware';
-import { NameIsExistConstraint } from './infrastructure/decorators/validate/login-is-exist.decorator';
+import { NameIsExistConstraint } from './infrastructure/decorators/validate/name-is-exist.decorator';
 
 const usersProviders: Provider[] = [
   UsersRepository,

@@ -3,11 +3,10 @@ import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import { applyAppSettings } from '../src/settings/apply-app-setting';
 import { UsersService } from '../src/features/users/application/users.service';
-import { skipSettings } from './base/skip-settings';
-import { aDescribe } from './base/aDescribe';
-import { UserServiceMockObject } from './base/mock/user.service.mock';
-import { UsersTestManager } from './base/UsersTestManager';
-import { expectLength } from './base/utils/expect-length.test-utils';
+import { skipSettings } from './utils/skip-settings';
+import { aDescribe } from './utils/aDescribe';
+import { UserServiceMock } from './mock/user.service.mock';
+import { UsersTestManager } from './utils/users-test-manager';
 import { UserCreateModel } from '../src/features/users/api/models/input/create-user.input.model';
 
 const TEST_ADMIN_CREDENTIALS = {
@@ -25,8 +24,8 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideProvider(UsersService)
-      .useValue(UserServiceMockObject)
-      //.useClass(UserServiceMock)
+      //.useValue(UserServiceMockObject)
+      .useClass(UserServiceMock)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -87,7 +86,7 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
   it('Auxiliary functions', async () => {
     const array = [1, 2, 3];
 
-    expectLength(array, 3);
+    expect(array).toHaveLength(3);
 
     // === false
     expect(false).toBeFalsy();

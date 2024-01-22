@@ -8,6 +8,21 @@ import {
 import { UsersRepository } from '../../../features/users/infrastructure/users.repository';
 import { Injectable } from '@nestjs/common';
 
+// Обязательна регистрация в ioc
+@ValidatorConstraint({ name: 'NameIsExist', async: false })
+@Injectable()
+export class NameIsExistConstraint implements ValidatorConstraintInterface {
+  constructor(private readonly usersRepository: UsersRepository) {}
+  async validate(value: any, args: ValidationArguments) {
+    const nameIsExist = await this.usersRepository.nameIsExist(value);
+    return !nameIsExist;
+  }
+
+  defaultMessage(validationArguments?: ValidationArguments): string {
+    return 'Name already exist';
+  }
+}
+
 // https://github.com/typestack/class-validator?tab=readme-ov-file#custom-validation-decorators
 export function NameIsExist(
   property?: string,
@@ -22,19 +37,4 @@ export function NameIsExist(
       validator: NameIsExistConstraint,
     });
   };
-}
-
-// Обязательна регистрация в ioc
-@ValidatorConstraint({ name: 'NameIsExist', async: false })
-@Injectable()
-export class NameIsExistConstraint implements ValidatorConstraintInterface {
-  constructor(private readonly usersRepository: UsersRepository) {}
-  async validate(value: any, args: ValidationArguments) {
-    const nameIsExist = await this.usersRepository.nameIsExist(value);
-    return !nameIsExist;
-  }
-
-  defaultMessage(validationArguments?: ValidationArguments): string {
-    return 'Name already exist';
-  }
 }

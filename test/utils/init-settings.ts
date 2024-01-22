@@ -1,15 +1,16 @@
 import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { AppModule } from '../../src/app.module';
 import { UsersService } from '../../src/features/users/application/users.service';
-import { UserServiceMockObject } from './mock/user.service.mock';
+import { UserServiceMockObject } from '../mock/user.service.mock';
 import { applyAppSettings } from '../../src/settings/apply-app-setting';
 import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
-import { deleteAllData } from './utils/delete-all-data';
-import { UsersTestManager } from './UsersTestManager';
+import { deleteAllData } from './delete-all-data';
+import { UsersTestManager } from './users-test-manager';
 import { appSettings } from '../../src/settings/app-settings';
 
 export const initSettings = async (
+  //передаем callback, который получает ModuleBuilder, если хотим изменить настройку тестового модуля
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
   console.log('in tests ENV: ', appSettings.env.getEnv());

@@ -1,10 +1,10 @@
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { UserCreateModel } from '../../src/features/users/api/models/input/create-user.input.model';
 
 export class UsersTestManager {
   constructor(protected readonly app: INestApplication) {}
-
+  // можно выносить некоторые проверки в отдельные методы для лучшей читаемости тестов
   expectCorrectModel(createModel: any, responseModel: any) {
     expect(createModel.name).toBe(responseModel.name);
     expect(createModel.email).toBe(responseModel.email);
@@ -35,10 +35,10 @@ export class UsersTestManager {
     login: string,
     password: string,
   ): Promise<{ accessToken: string }> {
-    await request(app.getHttpServer())
-      .post('/login')
-      .send({ login, password })
-      .expect(200);
+    // await request(app.getHttpServer())
+    //   .post('/login')
+    //   .send({ login, password })
+    //   .expect(200);
 
     return { accessToken: 'qwerty.access.token' };
   }

@@ -1,5 +1,5 @@
-import { UsersRepository } from '../../../src/features/users/infrastructure/users.repository';
-import { UsersService } from '../../../src/features/users/application/users.service';
+import { UsersRepository } from '../../src/features/users/infrastructure/users.repository';
+import { UsersService } from '../../src/features/users/application/users.service';
 
 //  .overrideProvider(UsersService)
 //  .useValue(UserServiceMockObject)
@@ -7,6 +7,9 @@ export const UserServiceMockObject = {
   sendMessageOnEmail() {
     console.log('Call mock method sendMessageOnEmail / MailService');
     return Promise.resolve(true);
+  },
+  create() {
+    return Promise.resolve('123');
   },
 };
 
@@ -21,9 +24,9 @@ export const UserServiceMockObject = {
 //      inject: [UsersRepository]
 //      }
 //     )
-// @ts-ignore
+
 export class UserServiceMock extends UsersService {
-  constructor(private usersRepository: UsersRepository) {
+  constructor(usersRepository: UsersRepository) {
     super(usersRepository);
   }
 

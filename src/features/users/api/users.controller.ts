@@ -20,12 +20,6 @@ import { UsersService } from '../application/users.service';
 import { NumberPipe } from '../../../infrastructure/pipes/number.pipe';
 import { AuthGuard } from '../../../infrastructure/guards/auth.guard';
 import { Request, Response } from 'express';
-import { IsNumber } from 'class-validator';
-
-class DeleteUserParams {
-  @IsNumber()
-  id: number;
-}
 
 // Tag для swagger
 @ApiTags('Users')
@@ -74,7 +68,12 @@ export class UsersController {
   // Установка guard на данный роут
   @UseGuards(AuthGuard)
   // Pipes из коробки https://docs.nestjs.com/pipes#built-in-pipes
-  async delete(@Param() params: DeleteUserParams) {
-    return params.id;
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return id;
+  }
+
+  @Get(':id')
+  async findUser(@Param('id') id: string) {
+    return this.usersQueryRepository.getById(id);
   }
 }
