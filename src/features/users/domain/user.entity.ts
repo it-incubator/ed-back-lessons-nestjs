@@ -15,6 +15,7 @@ export class User {
   @Prop()
   createdAt: Date;
 
+  //TODO: replace with new this()
   static create(name: string, email: string | null) {
     const user = new User();
 
