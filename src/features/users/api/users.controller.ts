@@ -17,8 +17,8 @@ import { UsersQueryRepository } from '../infrastructure/users.query-repository';
 import { UserCreateModel } from './models/input/create-user.input.model';
 import { UserOutputModel } from './models/output/user.output.model';
 import { UsersService } from '../application/users.service';
-import { NumberPipe } from '../../../infrastructure/pipes/number.pipe';
-import { AuthGuard } from '../../../infrastructure/guards/auth.guard';
+import { NumberPipe } from '../../../common/pipes/number.pipe';
+import { AuthGuard } from '../../../common/guards/auth.guard';
 import { Request, Response } from 'express';
 
 // Tag для swagger

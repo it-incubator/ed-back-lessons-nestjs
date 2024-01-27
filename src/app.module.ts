@@ -11,8 +11,8 @@ import { UsersService } from './features/users/application/users.service';
 import { UsersQueryRepository } from './features/users/infrastructure/users.query-repository';
 import { User, UserSchema } from './features/users/domain/user.entity';
 import { UsersController } from './features/users/api/users.controller';
-import { LoggerMiddleware } from './infrastructure/middlewares/logger.middleware';
-import { NameIsExistConstraint } from './infrastructure/decorators/validate/name-is-exist.decorator';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { NameIsExistConstraint } from './common/decorators/validate/name-is-exist.decorator';
 
 const usersProviders: Provider[] = [
   UsersRepository,
