@@ -5,7 +5,6 @@ import {
   Provider,
 } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { appSettings } from './settings/app-settings';
 import { UsersRepository } from './features/users/infrastructure/users.repository';
 import { UsersService } from './features/users/application/users.service';
 import { UsersQueryRepository } from './features/users/infrastructure/users.query-repository';
@@ -13,21 +12,56 @@ import { User, UserSchema } from './features/users/domain/user.entity';
 import { UsersController } from './features/users/api/users.controller';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { NameIsExistConstraint } from './common/decorators/validate/name-is-exist.decorator';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration from './settings/configuration';
+import { CqrsModule } from '@nestjs/cqrs';
+import {
+  UserCreatedEventHandler,
+  UserCreatedEventHandler2,
+} from './features/users/application/events/handlers/user-created.event-handler';
+import { VeryBigCalculateQuery } from './features/users/infrastructure/queries/very-big-calculate';
+import { CreateUserUseCase } from './features/users/application/usecases/create-user.usecase';
 
 const usersProviders: Provider[] = [
   UsersRepository,
   UsersService,
   UsersQueryRepository,
+  CreateUserUseCase,
+  VeryBigCalculateQuery,
+  UserCreatedEventHandler,
+  UserCreatedEventHandler2,
 ];
 
 @Module({
   // Регистрация модулей
   imports: [
-    MongooseModule.forRoot(
-      appSettings.env.isTesting()
-        ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
-        : appSettings.api.MONGO_CONNECTION_URI,
-    ),
+    CqrsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+    }),
+
+    // work with nest ConfigModule
+    MongooseModule.forRootAsync({
+      useFactory: (configService: ConfigService) => {
+        const env = configService.get('env');
+
+        const databaseUriKey =
+          env === 'TESTING' ? 'databaseUris.test' : 'databaseUris.prod';
+
+        const uri = configService.get(databaseUriKey);
+        console.log(databaseUriKey);
+        return {
+          uri: uri,
+        };
+      },
+      inject: [ConfigService],
+    }),
+
+    /*      // custom appSettings
+              MongooseModule.forRoot(appSettings.env.isTesting()
+                  ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
+                  : appSettings.api.MONGO_CONNECTION_URI),*/
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   // Регистрация провайдеров
@@ -35,22 +69,22 @@ const usersProviders: Provider[] = [
     ...usersProviders,
     NameIsExistConstraint,
     /* {
-            provide: UsersService,
-            useClass: UsersService,
-        },*/
+                provide: UsersService,
+                useClass: UsersService,
+            },*/
     /*{
-            provide: UsersService,
-            useValue: {method: () => {}},
+                provide: UsersService,
+                useValue: {method: () => {}},
 
-        },*/
+            },*/
     // Регистрация с помощью useFactory (необходимы зависимости из ioc, подбор провайдера, ...)
     /* {
-            provide: UsersService,
-            useFactory: (repo: UsersRepository) => {
-                return new UsersService(repo);
-            },
-            inject: [UsersRepository]
-        }*/
+                provide: UsersService,
+                useFactory: (repo: UsersRepository) => {
+                    return new UsersService(repo);
+                },
+                inject: [UsersRepository]
+            }*/
   ],
   // Регистрация контроллеров
   controllers: [UsersController],

@@ -1,5 +1,6 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -20,6 +21,16 @@ import { UsersService } from '../application/users.service';
 import { NumberPipe } from '../../../common/pipes/number.pipe';
 import { AuthGuard } from '../../../common/guards/auth.guard';
 import { Request, Response } from 'express';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import {
+  VeryBigCalculateQueryPayload,
+  VeryBigCalculateResultData,
+} from '../infrastructure/queries/very-big-calculate';
+import { InterlayerNotice } from '../../../base/models/Interlayer';
+import {
+  CreateUserCommand,
+  CreateUserResultData,
+} from '../application/usecases/create-user.usecase';
 
 // Tag для swagger
 @ApiTags('Users')
@@ -31,6 +42,10 @@ export class UsersController {
   constructor(
     usersService: UsersService,
     private readonly usersQueryRepository: UsersQueryRepository,
+    // шина для command
+    private readonly commandBus: CommandBus,
+    // шина для query
+    private readonly queryBus: QueryBus,
   ) {
     this.usersService = usersService;
   }
@@ -49,16 +64,34 @@ export class UsersController {
     return 'Hello';
   }
 
+  @Get('calculate')
+  @ApiOperation({ summary: 'Very Big Calculate' })
+  async veryBigCalculate(): Promise<VeryBigCalculateResultData | null> {
+    const payload = new VeryBigCalculateQueryPayload();
+
+    const result = await this.queryBus.execute<
+      VeryBigCalculateQueryPayload,
+      InterlayerNotice<VeryBigCalculateResultData>
+    >(payload);
+
+    return result.data;
+  }
+
   @Post()
   // Для переопределения default статус кода https://docs.nestjs.com/controllers#status-code
   @HttpCode(200)
   async create(@Body() createModel: UserCreateModel): Promise<UserOutputModel> {
-    const result = await this.usersService.create(
-      createModel.email,
-      createModel.name,
-    );
+    const command = new CreateUserCommand(createModel.name, createModel.email);
+    const creatingResult = await this.commandBus.execute<
+      CreateUserCommand,
+      InterlayerNotice<CreateUserResultData>
+    >(command);
 
-    return await this.usersQueryRepository.getById(result);
+    if (creatingResult.hasError()) {
+      throw new BadRequestException(creatingResult.extensions);
+    }
+
+    return await this.usersQueryRepository.getById(creatingResult.data!.userId);
   }
 
   // :id в декораторе говорит nest о том что это параметр

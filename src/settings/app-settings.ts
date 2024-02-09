@@ -49,7 +49,7 @@ class APISettings {
   public readonly MONGO_CONNECTION_URI: string;
   public readonly MONGO_CONNECTION_URI_FOR_TESTS: string;
 
-  constructor(private readonly envVariables: EnvironmentVariable) {
+  constructor(readonly envVariables: EnvironmentVariable) {
     // Application
     this.APP_PORT = this.getNumberOrDefault(envVariables.APP_PORT, 7840);
 

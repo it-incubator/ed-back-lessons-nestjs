@@ -10,7 +10,6 @@ export class UsersService {
     const result = await this.usersRepository.insert({
       email,
       name,
-      createdAt: new Date().toISOString(),
     });
 
     await this.sendMessageOnEmail(email);
