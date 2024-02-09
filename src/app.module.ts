@@ -13,7 +13,7 @@ import { UsersController } from './features/users/api/users.controller';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { NameIsExistConstraint } from './common/decorators/validate/name-is-exist.decorator';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from './settings/configuration';
+import configuration, { ConfigurationType } from './settings/configuration';
 import { CqrsModule } from '@nestjs/cqrs';
 import {
   UserCreatedEventHandler,
@@ -43,14 +43,19 @@ const usersProviders: Provider[] = [
 
     // work with nest ConfigModule
     MongooseModule.forRootAsync({
-      useFactory: (configService: ConfigService) => {
-        const env = configService.get('env');
+      useFactory: (configService: ConfigService<ConfigurationType, true>) => {
+        const environmentSettings = configService.get('environmentSettings', {
+          infer: true,
+        });
+        const databaseSettings = configService.get('databaseSettings', {
+          infer: true,
+        });
 
-        const databaseUriKey =
-          env === 'TESTING' ? 'databaseUris.test' : 'databaseUris.prod';
+        const uri = environmentSettings.isTesting
+          ? databaseSettings.MONGO_CONNECTION_URI_FOR_TESTS
+          : databaseSettings.MONGO_CONNECTION_URI;
+        console.log(uri);
 
-        const uri = configService.get(databaseUriKey);
-        console.log(databaseUriKey);
         return {
           uri: uri,
         };
