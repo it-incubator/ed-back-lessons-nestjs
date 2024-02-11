@@ -50,6 +50,7 @@ const setAppPrefix = (app: INestApplication) => {
 };
 
 const setSwagger = (app: INestApplication) => {
+  //TODO: appSettings should be used from DI
   if (!appSettings.env.isProduction()) {
     const swaggerPath = APP_PREFIX + '/swagger-doc';
 

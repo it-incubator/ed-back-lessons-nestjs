@@ -10,13 +10,6 @@ enum Environments {
 export type EnvironmentVariable = { [key: string]: string | undefined };
 
 export type ConfigurationType = ReturnType<typeof getConfig>;
-export type ApiSettingsType = ReturnType<typeof getConfig>['apiSettings'];
-export type DatabaseSettingsType = ReturnType<
-  typeof getConfig
->['databaseSettings'];
-export type EnvironmentSettingsType = ReturnType<
-  typeof getConfig
->['environmentSettings'];
 
 const getConfig = (
   environmentVariables: EnvironmentVariable,
@@ -25,7 +18,7 @@ const getConfig = (
   return {
     apiSettings: {
       PORT: Number.parseInt(environmentVariables.PORT || '3000'),
-      LOCAL_HOST: environmentVariables.LOCAL_HOST || 'http://localhost:3007',
+      LOCAL_HOST: environmentVariables.LOCAL_HOST,
       PUBLIC_FRIEND_FRONT_URL: environmentVariables.PUBLIC_FRIEND_FRONT_URL,
     },
 

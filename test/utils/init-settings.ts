@@ -13,6 +13,7 @@ export const initSettings = async (
   //передаем callback, который получает ModuleBuilder, если хотим изменить настройку тестового модуля
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
+  //TODO: appSettings should be used from DI
   console.log('in tests ENV: ', appSettings.env.getEnv());
   const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
     imports: [AppModule],

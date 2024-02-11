@@ -31,7 +31,7 @@ export class CreateUserUseCase
     const user = User.createUser(name, email || null);
 
     // Вариант валидации на уровне BLL
-    if (email == 'admin@site.com') {
+    if (email === 'admin@site.com') {
       notice.addError('Email not valid', 'email');
       return notice;
     }

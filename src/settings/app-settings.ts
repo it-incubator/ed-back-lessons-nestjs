@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import { Injectable } from '@nestjs/common';
 
 config();
 
@@ -10,6 +11,8 @@ export type EnvironmentsTypes =
   | 'TESTING';
 export const Environments = ['DEVELOPMENT', 'STAGING', 'PRODUCTION', 'TESTING'];
 
+//TODO: should be injectable
+//@Injectable()
 export class EnvironmentSettings {
   constructor(private env: EnvironmentsTypes) {}
 
@@ -34,6 +37,8 @@ export class EnvironmentSettings {
   }
 }
 
+//TODO: should be injectable
+//@Injectable()
 class AppSettings {
   constructor(
     public env: EnvironmentSettings,
@@ -41,6 +46,8 @@ class AppSettings {
   ) {}
 }
 
+//TODO: should be injectable
+//@Injectable()
 class APISettings {
   // Application
   public readonly APP_PORT: number;
@@ -71,11 +78,14 @@ class APISettings {
   }
 }
 
+//TODO: should be instantiated from DI
 const env = new EnvironmentSettings(
   (Environments.includes(process.env.ENV?.trim())
     ? process.env.ENV.trim()
     : 'DEVELOPMENT') as EnvironmentsTypes,
 );
 
+//TODO: should be instantiated from DI
 const api = new APISettings(process.env);
+//TODO: should be instantiated from DI
 export const appSettings = new AppSettings(env, api);
