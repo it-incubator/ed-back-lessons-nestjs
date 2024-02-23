@@ -34,14 +34,6 @@ const getConfig = (
       isStaging: currentEnvironment === Environments.STAGING,
       isTesting: currentEnvironment === Environments.TEST,
       isDevelopment: currentEnvironment === Environments.DEVELOPMENT,
-      isNonProduction:
-        currentEnvironment === Environments.STAGING ||
-        currentEnvironment === Environments.TEST ||
-        currentEnvironment === Environments.DEVELOPMENT,
-      isNonTesting:
-        currentEnvironment === Environments.STAGING ||
-        currentEnvironment === Environments.PRODUCTION ||
-        currentEnvironment === Environments.DEVELOPMENT,
     },
   };
 };

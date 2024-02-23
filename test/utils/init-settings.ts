@@ -7,14 +7,13 @@ import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { deleteAllData } from './delete-all-data';
 import { UsersTestManager } from './users-test-manager';
-import { appSettings } from '../../src/settings/app-settings';
+import configuration from '../../src/settings/configuration';
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder, если хотим изменить настройку тестового модуля
   addSettingsToModuleBuilder?: (moduleBuilder: TestingModuleBuilder) => void,
 ) => {
-  //TODO: appSettings should be used from DI
-  console.log('in tests ENV: ', appSettings.env.getEnv());
+  console.log('in tests ENV: ', configuration().environmentSettings.currentEnv);
   const testingModuleBuilder: TestingModuleBuilder = Test.createTestingModule({
     imports: [AppModule],
   })
