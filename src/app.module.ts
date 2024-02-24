@@ -6,6 +6,7 @@ import {AppController} from "./features/app/api/app.controller";
 import {App2Service} from "./features/app/application/app2.service";
 import configuration from './settings/configuration';
 import { ConfigModule } from '@nestjs/config';
+import { LoggerService } from './features/app/application/logger.service';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
         AppService,
         App2Service,
         TraceService,
+        //LoggerService,
     ]
 })
 export class AppModule {
