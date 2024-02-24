@@ -1,6 +1,6 @@
 import {Injectable, Scope} from '@nestjs/common';
 import {AppRepository} from '../infrastructure/app.repository';
-import {TraceService} from "./traise.service";
+import {TraceService} from "./trace.service";
 import { LoggerService } from './logger.service';
 
 @Injectable({scope: Scope.DEFAULT})

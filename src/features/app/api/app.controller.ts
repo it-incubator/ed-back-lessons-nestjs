@@ -1,7 +1,7 @@
 import {ApiTags} from '@nestjs/swagger';
 import {Controller, Get, Scope,} from '@nestjs/common';
 import {AppService} from '../application/app.service';
-import {TraceService} from "../application/traise.service";
+import {TraceService} from "../application/trace.service";
 import {App2Service} from "../application/app2.service";
 import { LoggerService } from '../application/logger.service';
 
