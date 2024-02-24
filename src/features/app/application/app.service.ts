@@ -15,7 +15,7 @@ export class AppService {
     }
 
     async getCountAndIncrement() {
-        //this.logger.log('request in AppService');
+        //this.logger.log('message in getCountAndIncrement method');
         //console.log(this.traceService.getTraceId())
 
         this.appRepository.increment();

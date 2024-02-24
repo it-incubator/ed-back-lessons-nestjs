@@ -1,4 +1,5 @@
 import {Injectable, Scope} from '@nestjs/common';
+import { LoggerService } from '../application/logger.service';
 
 @Injectable({
     scope: Scope.DEFAULT
@@ -6,7 +7,10 @@ import {Injectable, Scope} from '@nestjs/common';
 export class AppRepository {
     count = 0;
 
-    constructor() {
+    constructor(
+      //private logger: LoggerService
+    ) {
+        //this.logger.setContext(AppRepository.name);
         console.log('AppRepository creating')
     }
 
@@ -15,6 +19,7 @@ export class AppRepository {
     }
 
     getCount() {
+        //this.logger.log('message in getCount method');
         return this.count;
     }
 }
