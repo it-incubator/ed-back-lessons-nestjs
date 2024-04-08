@@ -82,6 +82,7 @@ export class UsersController {
   @HttpCode(200)
   async create(@Body() createModel: UserCreateModel): Promise<UserOutputModel> {
     const command = new CreateUserCommand(createModel.name, createModel.email);
+
     const creatingResult = await this.commandBus.execute<
       CreateUserCommand,
       InterlayerNotice<CreateUserResultData>

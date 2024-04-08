@@ -19,6 +19,35 @@ export class VeryBigCalculateQuery
 
     const result = this.doCalculate();
 
+    console.log("VeryBigCalculateQuery")
+
+
+    notice.addData({ result: result });
+
+    return notice;
+  }
+
+  private doCalculate() {
+    return Number((2 + (2 * Math.random()) / Math.random()).toFixed(2));
+  }
+}
+
+@QueryHandler(VeryBigCalculateQueryPayload)
+export class VeryBigCalculateQuery2
+    implements IQueryHandler<VeryBigCalculateQueryPayload>
+{
+  constructor() {}
+
+  async execute(
+      queryPayload: VeryBigCalculateQueryPayload,
+  ): Promise<InterlayerNotice<VeryBigCalculateResultData>> {
+    const {} = queryPayload;
+    const notice = new InterlayerNotice<VeryBigCalculateResultData>();
+
+    const result = this.doCalculate();
+
+    console.log("VeryBigCalculateQuery2")
+
     notice.addData({ result: result });
 
     return notice;

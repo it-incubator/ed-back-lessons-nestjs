@@ -4,8 +4,8 @@ import { HttpExceptionFilter } from '../common/exception-filters/http-exception-
 import { LoggerMiddlewareFunc } from '../common/middlewares/logger.middleware';
 import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
-import { ConfigurationType } from './configuration';
 import { ConfigService } from '@nestjs/config';
+import {ConfigurationType} from "./env/configuration";
 
 // Префикс нашего приложения (http://site.com/api)
 const APP_PREFIX = '/api';
