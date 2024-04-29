@@ -9,7 +9,7 @@ import { UsersRepository } from '../../../features/users/infrastructure/users.re
 import { Injectable } from '@nestjs/common';
 
 // Обязательна регистрация в ioc
-@ValidatorConstraint({ name: 'NameIsExist', async: false })
+@ValidatorConstraint({ name: 'NameIsExist', async: true })
 @Injectable()
 export class NameIsExistConstraint implements ValidatorConstraintInterface {
   constructor(private readonly usersRepository: UsersRepository) {}

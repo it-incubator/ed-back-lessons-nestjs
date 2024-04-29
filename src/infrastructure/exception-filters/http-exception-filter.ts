@@ -1,5 +1,5 @@
 import {
-  ArgumentsHost,
+  ArgumentsHost, BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
@@ -33,7 +33,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         errorsResponse.errorsMessages.push(responseBody.message);
       }
 
-      response.status(status).send(errorsResponse);
+      response.status(status).json(errorsResponse);
     } else {
       response.status(status).json({
         statusCode: status,

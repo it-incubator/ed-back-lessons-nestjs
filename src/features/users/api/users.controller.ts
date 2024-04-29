@@ -4,7 +4,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, NotFoundException,
   Param,
   ParseIntPipe,
   Post,
@@ -58,7 +58,13 @@ export class UsersController {
       createModel.name,
     );
 
-    return await this.usersQueryRepository.getById(result);
+    const user =  await this.usersQueryRepository.getById(result);
+
+    if(user === null){
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 
   // :id в декораторе говорит nest о том что это параметр

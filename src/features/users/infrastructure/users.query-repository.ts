@@ -24,8 +24,11 @@ import { UsersRepository } from './users.repository';
 export class UsersQueryRepository {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  public async getById(userId: string): Promise<UserOutputModel> {
+  public async getById(userId: string): Promise<UserOutputModel | null> {
     const user = await this.userModel.findById(userId, { __v: false });
+
+    if(user === null) return null;
+
     return UserOutputModelMapper(user);
   }
 }

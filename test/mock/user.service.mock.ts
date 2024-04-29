@@ -4,7 +4,7 @@ import { UsersService } from '../../src/features/users/application/users.service
 //  .overrideProvider(UsersService)
 //  .useValue(UserServiceMockObject)
 export const UserServiceMockObject = {
-  sendMessageOnEmail() {
+  sendMessageOnEmail(email: string) {
     console.log('Call mock method sendMessageOnEmail / MailService');
     return Promise.resolve(true);
   },
