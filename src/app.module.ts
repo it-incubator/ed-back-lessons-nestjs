@@ -6,6 +6,20 @@ import {UsersModule} from "./features/users/users.module";
 import {TestingModule} from "./features/testing/testing.module";
 import {AuthModule} from "./features/auth/auth.module";
 
+/*const  modules: Array<Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference> = [
+    AuthModule,
+    BlogsModule,
+    UsersModule,
+    ConfigModule.forRoot({
+        isGlobal: true,
+        load: [configuration],
+    }),
+]
+
+if(process.env.ENV !== 'PRODUCTION') {
+    modules.push(TestingModule);
+}*/
+
 @Module({
     imports: [
         AuthModule,
@@ -15,9 +29,10 @@ import {AuthModule} from "./features/auth/auth.module";
         ConfigModule.forRoot({
             isGlobal: true,
             load: [configuration],
-        }),],
+        }),
+    ],
     controllers: [],
-    providers: []
+    providers: [],
 })
 export class AppModule {
 }

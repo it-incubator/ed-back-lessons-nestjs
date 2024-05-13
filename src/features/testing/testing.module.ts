@@ -12,16 +12,18 @@ export class TestingModule {
         if (process.env.ENV !== 'PRODUCTION') {
             return {
                 module: TestingModule,
+                imports: [],
                 controllers: [TestingController],
                 providers: [TestingService],
             };
-        } else {
-            return {
-                module: TestingModule,
-                // Пустой массив providers и controllers, чтобы отключить модуль
-                providers: [],
-                controllers: [],
-            };
         }
+
+        return {
+            module: TestingModule,
+            // Пустой массив providers и controllers, чтобы отключить модуль
+            providers: [],
+            imports: [],
+            controllers: [],
+        };
     }
 }
