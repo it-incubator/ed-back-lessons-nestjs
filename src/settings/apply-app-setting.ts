@@ -7,6 +7,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '../common/exception-filters/http-exception-filter';
 import { appSettings } from './app-settings';
 import { LoggerMiddlewareFunc } from '../common/middlewares/logger.middleware';
+import {LoggingInterceptor} from "../common/interceptors/logging.interceptor";
 
 // Префикс нашего приложения (http://site.com/api)
 const APP_PREFIX = '/api';
@@ -14,7 +15,7 @@ const APP_PREFIX = '/api';
 // Используем данную функцию в main.ts и в e2e тестах
 export const applyAppSettings = (app: INestApplication) => {
   // Применение глобальных Interceptors
-  // app.useGlobalInterceptors()
+   app.useGlobalInterceptors(new LoggingInterceptor())
 
   // Применение глобальных Guards
   //  app.useGlobalGuards(new AuthGuard());
