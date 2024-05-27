@@ -4,7 +4,7 @@ import { UsersRepository } from '../infrastructure/users.repository';
 // Для провайдера всегда необходимо применять декоратор @Injectable() и регистрировать в модуле
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(private usersRepository: UsersRepository, private readonly settings : UsersServiceSettings) {}
 
   async create(email: string, name: string) {
     const result = await this.usersRepository.insert({
@@ -22,4 +22,8 @@ export class UsersService {
     console.log(`email adapter sent email = ${email}`);
     return Promise.resolve(true);
   }
+}
+
+export type UsersServiceSettings = {
+  count: number;
 }

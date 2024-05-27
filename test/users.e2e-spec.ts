@@ -4,6 +4,7 @@ import { INestApplication } from '@nestjs/common';
 import { UsersService } from '../src/features/users/application/users.service';
 import { UserServiceMock } from './mock/user.service.mock';
 import request from 'supertest';
+import {UsersRepository} from "../src/features/users/infrastructure/users.repository";
 
 describe('users', () => {
   let app: INestApplication;
@@ -12,7 +13,13 @@ describe('users', () => {
   beforeAll(async () => {
     const result = await initSettings((moduleBuilder) =>
       //override UsersService еще раз
-      moduleBuilder.overrideProvider(UsersService).useClass(UserServiceMock),
+      moduleBuilder.overrideProvider(UsersService).useFactory({factory: (repo: UsersRepository) => {
+        return new UserServiceMock(repo, {
+          count: 50
+        })
+        }, inject: [UsersRepository]
+
+      }),
     );
     app = result.app;
     userTestManger = result.userTestManger;

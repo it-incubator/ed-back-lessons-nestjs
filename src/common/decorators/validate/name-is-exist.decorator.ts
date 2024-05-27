@@ -19,7 +19,7 @@ export class NameIsExistConstraint implements ValidatorConstraintInterface {
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {
-    return 'Name already exist';
+    return `Name ${validationArguments?.value} already exist`;
   }
 }
 

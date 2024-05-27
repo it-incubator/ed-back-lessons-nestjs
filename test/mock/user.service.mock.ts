@@ -1,5 +1,5 @@
 import { UsersRepository } from '../../src/features/users/infrastructure/users.repository';
-import { UsersService } from '../../src/features/users/application/users.service';
+import {UsersService, UsersServiceSettings} from '../../src/features/users/application/users.service';
 
 //  .overrideProvider(UsersService)
 //  .useValue(UserServiceMockObject)
@@ -26,8 +26,8 @@ export const UserServiceMockObject = {
 //     )
 
 export class UserServiceMock extends UsersService {
-  constructor(usersRepository: UsersRepository) {
-    super(usersRepository);
+  constructor(usersRepository: UsersRepository,  settings : UsersServiceSettings) {
+    super(usersRepository, settings);
   }
 
   sendMessageOnEmail() {

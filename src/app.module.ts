@@ -16,7 +16,6 @@ import { NameIsExistConstraint } from './common/decorators/validate/name-is-exis
 
 const usersProviders: Provider[] = [
   UsersRepository,
-  UsersService,
   UsersQueryRepository,
 ];
 
@@ -44,13 +43,15 @@ const usersProviders: Provider[] = [
 
         },*/
     // Регистрация с помощью useFactory (необходимы зависимости из ioc, подбор провайдера, ...)
-    /* {
+     {
             provide: UsersService,
-            useFactory: (repo: UsersRepository) => {
-                return new UsersService(repo);
+            useFactory: ( repo: UsersRepository) => {
+                return new UsersService(repo, {
+                  count: 100
+                });
             },
             inject: [UsersRepository]
-        }*/
+        }
   ],
   // Регистрация контроллеров
   controllers: [UsersController],

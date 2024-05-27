@@ -80,6 +80,12 @@ const setAppPipes = (app: INestApplication) => {
         console.log(errors)
 
         errors.forEach((e) => {
+       /*   {
+            isEmail: "Error email",
+            isLength: "Error max length
+          }
+          */
+
           const constraintKeys = Object.keys(e.constraints as any);
 
 

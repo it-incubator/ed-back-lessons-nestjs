@@ -28,12 +28,15 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
             .useClass(UserServiceMock)
             /*  .useFactory({
                       factory: (usersRepo: UsersRepository) => {
-                          return new UserServiceMock(usersRepo);
+                          return new UserServiceMock(usersRepo, {
+                               count: 50
+                          });
                       },
                       inject: [UsersRepository]
                   }
               )*/
             .compile();
+
 
         app = moduleFixture.createNestApplication();
 
@@ -48,13 +51,13 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
         // change env
         console.log(process.env.ENV);
 
-        // const loginResult1 =   await request(app.getHttpServer())
-        //      .post('/login')
-        //      .send({
-        //          login: TEST_ADMIN_CREDENTIALS.login
-        //          , password: TEST_ADMIN_CREDENTIALS.password
-        //      })
-        //      .expect(200);
+        /*   const loginResult1 =   await request(app.getHttpServer())
+                .post('/login')
+                .send({
+                    login: TEST_ADMIN_CREDENTIALS.login
+                    , password: TEST_ADMIN_CREDENTIALS.password
+                })
+                .expect(200);*/
 
         const loginResult = await userTestManger.login(
             TEST_ADMIN_CREDENTIALS.login,
@@ -71,7 +74,7 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
         await app.close();
     });
 
-    it('/ (POST)', async () => {
+    it('/ create user tests (POST)', async () => {
         // Work with state
         const {adminTokens} = expect.getState();
 
@@ -100,7 +103,7 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
     it('Auxiliary functions', async () => {
         const array = [1, 2, 3];
 
-       // expect(array.length).toBe(3);
+        // expect(array.length).toBe(3);
         expect(array).toHaveLength(3);
 
         // === false
