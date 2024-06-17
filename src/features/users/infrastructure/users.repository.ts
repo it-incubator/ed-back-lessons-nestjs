@@ -5,11 +5,11 @@ import {User, UserDocument} from "../domain/user.entity";
 
 @Injectable()
 export class UsersRepository {
-    constructor(@InjectModel(User.name) private userModel: Model<User>) {
+    constructor(@InjectModel(User.name) private UserModel: Model<UserDocument>) {
     }
 
     public async insert(user: User) {
-        const result: UserDocument[] = await this.userModel.insertMany(user);
+        const result: UserDocument[] = await this.UserModel.insertMany(user);
         return result[0];
     }
 }
