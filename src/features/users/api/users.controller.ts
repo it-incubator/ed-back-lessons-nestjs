@@ -40,7 +40,7 @@ export class UsersController {
         res.cookie('refreshToken', '321')
 
         return {
-            authToken: "Hello"
+            authToken: "auth_token"
         };
     }
 
@@ -64,7 +64,6 @@ export class UsersController {
     // @UseGuards(AuthGuard)
     // Pipes из коробки https://docs.nestjs.com/pipes#built-in-pipes
     async delete(@Param('id') id: number) {
-        console.log(id)
-        //return id;
+        return id;
     }
 }

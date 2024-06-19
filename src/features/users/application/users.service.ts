@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '../infrastructure/users.repository';
+import {Injectable} from '@nestjs/common';
+import {UsersRepository} from '../infrastructure/users.repository';
 
 // Для провайдера всегда необходимо применять декоратор @Injectable() и регистрировать в модуле
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+    constructor(private usersRepository: UsersRepository) {
+    }
 
-  async create(email: string, name: string) {
-    // email send message
-    // this.emailAdapter.send(message);
+    async create(email: string, name: string) {
+        const user = await this.usersRepository.create(email, name);
 
-    return '6654a4bd6eccda04b0ec875a';
-  }
+        // email send message
+        // this.emailAdapter.send(message);
+
+        return user.id;
+    }
 }

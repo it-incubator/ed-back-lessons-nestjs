@@ -1,8 +1,6 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import {HydratedDocument} from 'mongoose';
+import {HydratedDocument, Model} from 'mongoose';
 import {randomUUID} from 'crypto';
-
-export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
@@ -31,3 +29,12 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.loadClass(User);
+
+// Types
+export type UserDocument = HydratedDocument<User>;
+
+type UserModelStaticType = {
+    createUser: (name: string, email: string | null) => UserDocument
+}
+
+export type UserModelType = Model<UserDocument> & UserModelStaticType;
