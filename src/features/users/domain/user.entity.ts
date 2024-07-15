@@ -1,30 +1,32 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {HydratedDocument, Model} from 'mongoose';
-import {randomUUID} from 'crypto';
 
 @Schema()
 export class User {
-    @Prop()
-    name: string;
+    @Prop({ type: String, required: true})
+    login: string;
 
-    @Prop()
+    @Prop({ type: String, required: true})
+    passwordHash: string;
+
+    @Prop({ type: String, required: true})
     email: string;
 
-    @Prop()
+    @Prop({ type: Date, default: new Date()})
     createdAt: Date;
 
-    static createUser(name: string, email: string | null) {
-        const user = new this();
+    /*  static createUser(login: string, email: string | null) {
+          const user = new this();
 
-        user.name = name;
-        user.email = email ?? `${randomUUID()}_${name}@it-incubator.io`;
+          user.login = login;
+          user.email = email ?? `${randomUUID()}_${login}@it-incubator.io`;
 
-        return user;
-    }
+          return user;
+      }
 
-    getName() {
-        return this.name;
-    }
+      getLogin() {
+          return this.login;
+      }*/
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -37,4 +39,4 @@ type UserModelStaticType = {
     createUser: (name: string, email: string | null) => UserDocument
 }
 
-export type UserModelType = Model<UserDocument> & UserModelStaticType;
+export type UserModelType = Model<UserDocument> //& UserModelStaticType;

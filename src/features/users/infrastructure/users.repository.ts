@@ -1,19 +1,21 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
-import {User, UserDocument, UserModelType} from "../domain/user.entity";
+import {User, UserModelType} from "../domain/user.entity";
 
 @Injectable()
 export class UsersRepository {
     constructor(@InjectModel(User.name) private UserModel: UserModelType) {
     }
 
-    public async create(email: string, name: string): Promise<UserDocument> {
-        const user: UserDocument = this.UserModel.createUser(name, email);
+     async create(newUser: User): Promise<string> {
+         const insertResult = await this.UserModel.insertMany([newUser]);
 
-        return this.save(user);
-    }
+         return insertResult[0].id;
+     }
 
-    public async save(user: UserDocument): Promise<UserDocument> {
-        return user.save();
+    async delete(id: string): Promise<boolean> {
+        const deletingResult = await this.UserModel.deleteOne({ _id: id });
+
+        return deletingResult.deletedCount === 1;
     }
 }

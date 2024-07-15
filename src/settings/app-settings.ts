@@ -34,7 +34,7 @@ export class EnvironmentSettings {
   }
 }
 
-class AppSettings {
+export class AppSettings {
   constructor(
     public env: EnvironmentSettings,
     public api: APISettings,
@@ -44,6 +44,7 @@ class AppSettings {
 class APISettings {
   // Application
   public readonly APP_PORT: number;
+  public readonly HASH_ROUNDS: number;
 
   // Database
   public readonly MONGO_CONNECTION_URI: string;
@@ -51,6 +52,7 @@ class APISettings {
   constructor(private readonly envVariables: EnvironmentVariable) {
     // Application
     this.APP_PORT = this.getNumberOrDefault(envVariables.APP_PORT, 7840);
+    this.HASH_ROUNDS = this.getNumberOrDefault(envVariables.HASH_ROUNDS, 10);
 
     // Database
     this.MONGO_CONNECTION_URI = envVariables.MONGO_CONNECTION_URI ?? 'mongodb://localhost/nest';

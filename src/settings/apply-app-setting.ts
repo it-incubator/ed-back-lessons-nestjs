@@ -4,7 +4,8 @@ import {HttpExceptionFilter} from '../common/exception-filters/http-exception-fi
 import {appSettings} from './app-settings';
 import {LoggingInterceptor} from "../common/interceptors/logging.interceptor";
 
-// Префикс нашего приложения (http://site.com/api)
+// Префикс нашего приложения (https://site.com/api)
+
 const APP_PREFIX = '/api';
 
 // Используем данную функцию в main.ts и в e2e тестах
@@ -67,6 +68,7 @@ const setAppPipes = (app: INestApplication) => {
             // Перехватываем ошибку, кастомизируем её и выкидываем 400 с собранными данными
             exceptionFactory: (errors) => {
                 const customErrors = [];
+                console.log(errors)
 
                 errors.forEach((e) => {
                     const constraintKeys = Object.keys(e.constraints);
