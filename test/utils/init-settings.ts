@@ -1,13 +1,13 @@
-import {Test, TestingModuleBuilder} from '@nestjs/testing';
-import {AppModule} from '../../src/app.module';
-import {UsersService} from '../../src/features/users/application/users.service';
-import {UserServiceMockObject} from '../mock/user.service.mock';
-import {applyAppSettings} from '../../src/settings/apply-app-setting';
-import {Connection} from 'mongoose';
-import {getConnectionToken} from '@nestjs/mongoose';
-import {deleteAllData} from './delete-all-data';
-import {UsersTestManager} from './users-test-manager';
-import {appSettings} from '../../src/settings/app-settings';
+import { getConnectionToken } from '@nestjs/mongoose';
+import { Test, TestingModuleBuilder } from '@nestjs/testing';
+import { Connection } from 'mongoose';
+import { AppModule } from '../../src/app.module';
+import { UsersService } from '../../src/features/users/application/users.service';
+import { appSettings } from '../../src/settings/app-settings';
+import { applyAppSettings } from '../../src/settings/apply-app-setting';
+import { UserServiceMockObject } from '../mock/user.service.mock';
+import { deleteAllData } from './delete-all-data';
+import { UsersTestManager } from './users-test-manager';
 
 export const initSettings = async (
     //передаем callback, который получает ModuleBuilder, если хотим изменить настройку тестового модуля

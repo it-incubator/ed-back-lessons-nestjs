@@ -13,24 +13,24 @@ export class UsersTestManager {
         expect(createModel.lastName).toBe(responseModel.lastName);
     }
 
-    async createUser(adminAccessToken: string, createModel: UserCreateModel) {
+    async createUser(adminAccessToken: string, createModel: UserCreateModel, statusCode: number = 201) {
         return request(this.app.getHttpServer())
             .post('/api/users')
             .auth(adminAccessToken, {
                 type: 'bearer',
             })
             .send(createModel)
-            .expect(201);
+            .expect(statusCode);
     }
 
-    async updateUser(adminAccessToken: string, userId: string, updateModel: any) {
+    async updateUser(adminAccessToken: string, userId: string, updateModel: any, statusCode: number = 204) {
         return request(this.app.getHttpServer())
             .put(`/api/users/${userId}`)
             .auth(adminAccessToken, {
                 type: 'bearer',
             })
             .send(updateModel)
-            .expect(204);
+            .expect(statusCode);
     }
 
     async login(

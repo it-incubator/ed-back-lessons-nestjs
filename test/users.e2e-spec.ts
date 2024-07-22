@@ -14,12 +14,14 @@ describe('users', () => {
   beforeAll(async () => {
     const result = await initSettings((moduleBuilder) =>
       //override UsersService еще раз
-      moduleBuilder.overrideProvider(UsersService).useFactory({
-        factory: (repo: UsersRepository, authService: AuthService) => {
-          return new UserServiceMock(repo, authService)
-        }, inject: [UsersRepository, AuthService]
+      moduleBuilder
+        .overrideProvider(UsersService)
+        .useFactory({
+          factory: (repo: UsersRepository, authService: AuthService) => {
+            return new UserServiceMock(repo, authService)
+          }, inject: [UsersRepository, AuthService]
 
-      }),
+        }),
     );
     app = result.app;
     userTestManger = result.userTestManger;

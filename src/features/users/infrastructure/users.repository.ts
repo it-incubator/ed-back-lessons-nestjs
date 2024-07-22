@@ -18,7 +18,11 @@ export class UsersRepository {
     return deletingResult.deletedCount === 1;
   }
 
-  async nameIsExist(name: string): Promise<boolean> {
-    return !!(await this.UserModel.countDocuments({ name }))
+  async loginIsExist(login: string): Promise<boolean> {
+    return !!(await this.UserModel.countDocuments({ login: login }))
+  }
+
+  async emailIsExist(email: string): Promise<boolean> {
+    return !!(await this.UserModel.countDocuments({ email: email }))
   }
 }

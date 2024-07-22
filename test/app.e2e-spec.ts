@@ -26,15 +26,13 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
             .overrideProvider(UsersService)
             //.useValue(UserServiceMockObject)
             .useClass(UserServiceMock)
-            /*  .useFactory({
-                      factory: (usersRepo: UsersRepository) => {
-                          return new UserServiceMock(usersRepo, {
-                               count: 50
-                          });
-                      },
-                      inject: [UsersRepository]
-                  }
-              )*/
+            // .useFactory({
+            //     factory: (usersRepo: UsersRepository, authService: AuthService) => {
+            //         return new UserServiceMock(usersRepo, authService);
+            //     },
+            //     inject: [UsersRepository, AuthService]
+            // }
+            //)
             .compile();
 
 

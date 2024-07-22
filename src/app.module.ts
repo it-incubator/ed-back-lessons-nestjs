@@ -5,7 +5,8 @@ import {
   Provider,
 } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { NameIsExistConstraint } from './common/decorators/validate/name-is-exist.decorator';
+import { EmailIsExistConstraint } from './common/decorators/validate/email-is-exist.decorator';
+import { LoginIsExistConstraint } from './common/decorators/validate/login-is-exist.decorator';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { AuthService } from './features/auth/application/auth.service';
 import { UsersController } from './features/users/api/users.controller';
@@ -33,7 +34,8 @@ const usersProviders: Provider[] = [
   // Регистрация провайдеров
   providers: [
     ...usersProviders,
-    NameIsExistConstraint,
+    LoginIsExistConstraint,
+    EmailIsExistConstraint,
     AuthService,
     {
       provide: AppSettings,

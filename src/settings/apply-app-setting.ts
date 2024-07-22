@@ -91,7 +91,8 @@ const setAppPipes = (app: INestApplication) => {
 
           console.log(e.constraints)
 
-          constraintKeys.forEach((cKey) => {
+          constraintKeys.forEach((cKey, index) => {
+            if (index >= 1) return;
             const msg = e.constraints?.[cKey] as any;
 
             // @ts-ignore

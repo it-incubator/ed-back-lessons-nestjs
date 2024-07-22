@@ -5,9 +5,11 @@ import {
   Get,
   HttpCode, NotFoundException,
   Param, Post,
-  Query
+  Query,
+  UseGuards
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { BasicAuthGuard } from 'src/common/guards/basic-auth.guard';
 import { SortingPropertiesType } from '../../../../src/base/types/sorting-properties.type';
 import { PaginationOutput, PaginationWithSearchLoginAndEmailTerm } from '../../../base/models/pagination.base.model';
 import { UsersService } from '../application/users.service';
@@ -19,9 +21,10 @@ export const USERS_SORTING_PROPERTIES: SortingPropertiesType<UserOutputModel> = 
 
 // Tag для swagger
 @ApiTags('Users')
+@ApiSecurity('basic')
 @Controller('users')
 // Установка guard на весь контроллер
-//@UseGuards(AuthGuard)
+@UseGuards(BasicAuthGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,

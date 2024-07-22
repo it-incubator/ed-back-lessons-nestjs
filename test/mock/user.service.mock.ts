@@ -31,7 +31,7 @@ export class UserServiceMock extends UsersService {
     super(usersRepository, authService);
   }
 
-  sendMessageOnEmail() {
+  sendMessageOnEmail(email: string) {
     console.log(
       'Call mock method sendMessageOnEmail / MailService, for specific test',
     );

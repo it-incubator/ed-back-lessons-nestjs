@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery } from 'mongoose';
+import { PaginationOutput, PaginationWithSearchLoginAndEmailTerm } from 'src/base/models/pagination.base.model';
 import {
   UserOutputModel,
   UserOutputModelMapper,
 } from '../api/models/output/user.output.model';
 import { User, UserModelType } from '../domain/user.entity';
-import { PaginationOutput, PaginationWithSearchLoginAndEmailTerm } from './../../../../src/base/models/pagination.base.model';
 
 
 @Injectable()

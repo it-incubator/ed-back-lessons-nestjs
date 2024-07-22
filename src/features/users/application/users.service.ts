@@ -30,6 +30,13 @@ export class UsersService {
   async delete(id: string): Promise<boolean> {
     return this.usersRepository.delete(id);
   }
+
+  sendMessageOnEmail(email: string) {
+    console.log(
+      'Call NOT MOCK method sendMessageOnEmail / MailService, for specific test',
+    );
+    return Promise.resolve(true);
+  }
 }
 
 export type UsersServiceSettings = {

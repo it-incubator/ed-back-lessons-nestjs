@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationArguments,
@@ -6,25 +7,24 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { UsersRepository } from '../../../features/users/infrastructure/users.repository';
-import { Injectable } from '@nestjs/common';
 
 // Обязательна регистрация в ioc
-@ValidatorConstraint({ name: 'NameIsExist', async: true })
+@ValidatorConstraint({ name: 'LoginIsExist', async: true })
 @Injectable()
-export class NameIsExistConstraint implements ValidatorConstraintInterface {
-  constructor(private readonly usersRepository: UsersRepository) {}
+export class LoginIsExistConstraint implements ValidatorConstraintInterface {
+  constructor(private readonly usersRepository: UsersRepository) { }
   async validate(value: any, args: ValidationArguments) {
-    const nameIsExist = await this.usersRepository.nameIsExist(value);
-    return !nameIsExist;
+    const loginIsExist = await this.usersRepository.loginIsExist(value);
+    return !loginIsExist;
   }
 
   defaultMessage(validationArguments?: ValidationArguments): string {
-    return `Name ${validationArguments?.value} already exist`;
+    return `Login ${validationArguments?.value} already exist`;
   }
 }
 
 // https://github.com/typestack/class-validator?tab=readme-ov-file#custom-validation-decorators
-export function NameIsExist(
+export function LoginIsExist(
   property?: string,
   validationOptions?: ValidationOptions,
 ) {
@@ -34,7 +34,7 @@ export function NameIsExist(
       propertyName: propertyName,
       options: validationOptions,
       constraints: [property],
-      validator: NameIsExistConstraint,
+      validator: LoginIsExistConstraint,
     });
   };
 }
