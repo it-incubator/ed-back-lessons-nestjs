@@ -5,14 +5,15 @@ import {
   Provider,
 } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { appSettings } from './settings/app-settings';
-import { UsersRepository } from './features/users/infrastructure/users.repository';
-import { UsersService } from './features/users/application/users.service';
-import { UsersQueryRepository } from './features/users/infrastructure/users.query-repository';
-import { User, UserSchema } from './features/users/domain/user.entity';
-import { UsersController } from './features/users/api/users.controller';
-import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { NameIsExistConstraint } from './common/decorators/validate/name-is-exist.decorator';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { AuthService } from './features/auth/application/auth.service';
+import { UsersController } from './features/users/api/users.controller';
+import { UsersService } from './features/users/application/users.service';
+import { User, UserSchema } from './features/users/domain/user.entity';
+import { UsersQueryRepository } from './features/users/infrastructure/users.query-repository';
+import { UsersRepository } from './features/users/infrastructure/users.repository';
+import { AppSettings, appSettings } from './settings/app-settings';
 
 const usersProviders: Provider[] = [
   UsersRepository,
@@ -33,6 +34,12 @@ const usersProviders: Provider[] = [
   providers: [
     ...usersProviders,
     NameIsExistConstraint,
+    AuthService,
+    {
+      provide: AppSettings,
+      useValue: appSettings,
+
+    },
     /* {
             provide: UsersService,
             useClass: UsersService,
@@ -43,15 +50,13 @@ const usersProviders: Provider[] = [
 
         },*/
     // Регистрация с помощью useFactory (необходимы зависимости из ioc, подбор провайдера, ...)
-     {
-            provide: UsersService,
-            useFactory: ( repo: UsersRepository) => {
-                return new UsersService(repo, {
-                  count: 100
-                });
-            },
-            inject: [UsersRepository]
-        }
+    {
+      provide: UsersService,
+      useFactory: (repo: UsersRepository, authService: AuthService) => {
+        return new UsersService(repo, authService);
+      },
+      inject: [UsersRepository, AuthService]
+    }
   ],
   // Регистрация контроллеров
   controllers: [UsersController],

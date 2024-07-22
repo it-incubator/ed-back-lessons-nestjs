@@ -1,13 +1,13 @@
-import {Test, TestingModule} from '@nestjs/testing';
-import {INestApplication} from '@nestjs/common';
-import {AppModule} from '../src/app.module';
-import {applyAppSettings} from '../src/settings/apply-app-setting';
-import {UsersService} from '../src/features/users/application/users.service';
-import {skipSettings} from './utils/skip-settings';
-import {aDescribe} from './utils/aDescribe';
-import {UserServiceMock} from './mock/user.service.mock';
-import {UsersTestManager} from './utils/users-test-manager';
-import {UserCreateModel} from '../src/features/users/api/models/input/create-user.input.model';
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppModule } from '../src/app.module';
+import { UserCreateModel } from '../src/features/users/api/models/input/create-user.input.model';
+import { UsersService } from '../src/features/users/application/users.service';
+import { applyAppSettings } from '../src/settings/apply-app-setting';
+import { UserServiceMock } from './mock/user.service.mock';
+import { aDescribe } from './utils/aDescribe';
+import { skipSettings } from './utils/skip-settings';
+import { UsersTestManager } from './utils/users-test-manager';
 
 const TEST_ADMIN_CREDENTIALS = {
     login: 'test',
@@ -76,10 +76,11 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
 
     it('/ create user tests (POST)', async () => {
         // Work with state
-        const {adminTokens} = expect.getState();
+        const { adminTokens } = expect.getState();
 
         const createModel: UserCreateModel = {
-            name: 'qwerty',
+            login: 'name1',
+            password: 'qwerty',
             email: 'some-email@gg.cc',
         };
 
@@ -90,10 +91,11 @@ aDescribe(skipSettings.for('appTests'))('AppController (e2e)', () => {
 
         userTestManger.expectCorrectModel(createModel, createResponse.body);
 
-        const updateModel = {name: 'qwerty_777'};
+        const updateModel = { name: 'qwerty_777' };
 
         const updateResponse = await userTestManger.updateUser(
             adminTokens.accessToken,
+            createResponse.body.id,
             updateModel,
         );
 

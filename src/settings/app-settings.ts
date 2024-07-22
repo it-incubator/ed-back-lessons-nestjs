@@ -11,7 +11,7 @@ export type EnvironmentsTypes =
 export const Environments = ['DEVELOPMENT', 'STAGING', 'PRODUCTION', 'TESTING'];
 
 export class EnvironmentSettings {
-  constructor(private env: EnvironmentsTypes) {}
+  constructor(private env: EnvironmentsTypes) { }
 
   getEnv() {
     return this.env;
@@ -34,16 +34,17 @@ export class EnvironmentSettings {
   }
 }
 
-class AppSettings {
+export class AppSettings {
   constructor(
     public env: EnvironmentSettings,
     public api: APISettings,
-  ) {}
+  ) { }
 }
 
 class APISettings {
   // Application
   public readonly APP_PORT: number;
+  public readonly HASH_ROUNDS: number;
 
   // Database
   public readonly MONGO_CONNECTION_URI: string;
@@ -52,6 +53,7 @@ class APISettings {
   constructor(private readonly envVariables: EnvironmentVariable) {
     // Application
     this.APP_PORT = this.getNumberOrDefault(envVariables.APP_PORT as string, 7840);
+    this.HASH_ROUNDS = this.getNumberOrDefault(envVariables.HASH_ROUNDS, 10);
 
     // Database
     this.MONGO_CONNECTION_URI =
@@ -60,7 +62,7 @@ class APISettings {
       envVariables.MONGO_CONNECTION_URI_FOR_TESTS ?? 'mongodb://localhost/test';
   }
 
-  private getNumberOrDefault(value: string, defaultValue: number): number {
+  private getNumberOrDefault(value: any, defaultValue: number): number {
     const parsedValue = Number(value);
 
     if (isNaN(parsedValue)) {

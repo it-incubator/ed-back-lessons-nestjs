@@ -4,11 +4,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpExceptionFilter } from '../common/exception-filters/http-exception-filter';
-import { appSettings } from './app-settings';
-import { LoggerMiddlewareFunc } from '../common/middlewares/logger.middleware';
-import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
+import { AppModule } from '../app.module';
+import { HttpExceptionFilter } from '../common/exception-filters/http-exception-filter';
+import { LoggerMiddlewareFunc } from '../common/middlewares/logger.middleware';
+import { appSettings } from './app-settings';
 
 // Префикс нашего приложения (http://site.com/api)
 const APP_PREFIX = '/api';
@@ -80,11 +80,11 @@ const setAppPipes = (app: INestApplication) => {
         console.log(errors)
 
         errors.forEach((e) => {
-       /*   {
-            isEmail: "Error email",
-            isLength: "Error max length
-          }
-          */
+          /*   {
+               isEmail: "Error email",
+               isLength: "Error max length
+             }
+             */
 
           const constraintKeys = Object.keys(e.constraints as any);
 

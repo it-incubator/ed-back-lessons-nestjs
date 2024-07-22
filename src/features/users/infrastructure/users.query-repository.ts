@@ -1,34 +1,68 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserDocument } from '../domain/user.entity';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { FilterQuery } from 'mongoose';
 import {
   UserOutputModel,
   UserOutputModelMapper,
 } from '../api/models/output/user.output.model';
-import { UsersRepository } from './users.repository';
+import { User, UserModelType } from '../domain/user.entity';
+import { PaginationOutput, PaginationWithSearchLoginAndEmailTerm } from './../../../../src/base/models/pagination.base.model';
 
-// export abstract class BaseQueryRepository<M> {
-//     protected constructor(private model: Model<M>) {
-//     }
-//
-//     async find(filter: FilterQuery<M>,
-//                projection?: ProjectionType<M> | null | undefined,
-//                options?: QueryOptions<M> | null | undefined,
-//                pagination: {skip: number, limit: number }) {
-//         return this.model.find<M>(filter, projection, options)
-//     }
-// }
 
 @Injectable()
 export class UsersQueryRepository {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(@InjectModel(User.name) private userModel: UserModelType) {
+  }
 
-  public async getById(userId: string): Promise<UserOutputModel | null> {
-    const user = await this.userModel.findById(userId, { __v: false });
+  async getById(id: string): Promise<UserOutputModel | null> {
+    const user = await this.userModel.findOne({ _id: id });
 
-    if(user === null) return null;
+    if (user === null) {
+      return null;
+    }
 
     return UserOutputModelMapper(user);
+  }
+
+  async getAll(pagination: PaginationWithSearchLoginAndEmailTerm): Promise<PaginationOutput<UserOutputModel>> {
+    const filters: FilterQuery<User>[] = [];
+
+    if (pagination.searchEmailTerm) {
+      filters.push(
+        {
+          email: { $regex: pagination.searchEmailTerm, $options: 'i' }
+        }
+      )
+    }
+
+    if (pagination.searchLoginTerm) {
+      filters.push(
+        {
+          login: { $regex: pagination.searchLoginTerm, $options: 'i' }
+        }
+      )
+    }
+
+    const filter: FilterQuery<User> = {};
+
+    if (filters.length > 0) {
+      filter.$or = filters;
+    }
+
+    return await this.__getResult(filter, pagination);
+  }
+
+  private async __getResult(filter: FilterQuery<User>, pagination: PaginationWithSearchLoginAndEmailTerm): Promise<PaginationOutput<UserOutputModel>> {
+    const users = await this.userModel
+      .find(filter)
+      .sort({ [pagination.sortBy]: pagination.getSortDirectionInNumericFormat() })
+      .skip(pagination.getSkipItemsCount())
+      .limit(pagination.pageSize);
+
+    const totalCount = await this.userModel.countDocuments(filter);
+
+    const mappedPosts = users.map(UserOutputModelMapper);
+
+    return new PaginationOutput<UserOutputModel>(mappedPosts, pagination.pageNumber, pagination.pageSize, totalCount);
   }
 }

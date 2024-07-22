@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { AuthService } from '../../auth/application/auth.service';
 import { UsersRepository } from '../infrastructure/users.repository';
 
 // Для провайдера всегда необходимо применять декоратор @Injectable() и регистрировать в модуле
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository, private readonly settings : UsersServiceSettings) {}
 
-  async create(email: string, name: string) {
-    const result = await this.usersRepository.insert({
-      email,
-      name,
-      createdAt: new Date().toISOString(),
-    });
-
-    await this.sendMessageOnEmail(email);
-
-    return result._id.toString();
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly authService: AuthService
+  ) {
   }
 
-  sendMessageOnEmail(email: string) {
-    console.log(`email adapter sent email = ${email}`);
-    return Promise.resolve(true);
+  async create(login: string, password: string, email: string): Promise<string> {
+    const generatedPasswordHash = await this.authService.generatePasswordHash(password);
+
+    const newUser: any = {
+      login: login,
+      passwordHash: generatedPasswordHash,
+      email: email,
+      createdAt: new Date(),
+    };
+
+    const createdUserId: string = await this.usersRepository.create(newUser);
+
+    return createdUserId;
+  }
+
+  async delete(id: string): Promise<boolean> {
+    return this.usersRepository.delete(id);
   }
 }
 

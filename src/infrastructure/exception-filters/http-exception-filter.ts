@@ -1,15 +1,14 @@
 import {
-  ArgumentsHost, BadRequestException,
-  Catch,
+  ArgumentsHost, Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus,
+  HttpStatus
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 // https://docs.nestjs.com/exception-filters
 @Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -17,7 +16,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     if (status === HttpStatus.BAD_REQUEST) {
-      const errorsResponse = {
+      const errorsResponse: { errorsMessages: any[] } = {
         errorsMessages: [],
       };
 
@@ -25,11 +24,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
       if (Array.isArray(responseBody.message)) {
         responseBody.message.forEach((e) =>
-            // @ts-ignore
           errorsResponse.errorsMessages.push(e),
         );
       } else {
-        // @ts-ignore
         errorsResponse.errorsMessages.push(responseBody.message);
       }
 

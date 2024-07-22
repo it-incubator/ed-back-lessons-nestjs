@@ -1,6 +1,6 @@
-import {INestApplication} from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import {UserCreateModel} from '../../src/features/users/api/models/input/create-user.input.model';
+import { UserCreateModel } from '../../src/features/users/api/models/input/create-user.input.model';
 
 export class UsersTestManager {
     constructor(protected readonly app: INestApplication) {
@@ -20,12 +20,12 @@ export class UsersTestManager {
                 type: 'bearer',
             })
             .send(createModel)
-            .expect(200);
+            .expect(201);
     }
 
-    async updateUser(adminAccessToken: string, updateModel: any) {
+    async updateUser(adminAccessToken: string, userId: string, updateModel: any) {
         return request(this.app.getHttpServer())
-            .put('/api/users')
+            .put(`/api/users/${userId}`)
             .auth(adminAccessToken, {
                 type: 'bearer',
             })
@@ -39,7 +39,7 @@ export class UsersTestManager {
     ): Promise<{ accessToken: string, refreshToken: string }> {
         const response = await request(this.app.getHttpServer())
             .post('/login')
-            .send({login, password})
+            .send({ login, password })
             .expect(200);
 
         return {

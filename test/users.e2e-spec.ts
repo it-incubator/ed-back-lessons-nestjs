@@ -1,10 +1,11 @@
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { AuthService } from '../src/features/auth/application/auth.service';
+import { UsersService } from '../src/features/users/application/users.service';
+import { UsersRepository } from "../src/features/users/infrastructure/users.repository";
+import { UserServiceMock } from './mock/user.service.mock';
 import { initSettings } from './utils/init-settings';
 import { UsersTestManager } from './utils/users-test-manager';
-import { INestApplication } from '@nestjs/common';
-import { UsersService } from '../src/features/users/application/users.service';
-import { UserServiceMock } from './mock/user.service.mock';
-import request from 'supertest';
-import {UsersRepository} from "../src/features/users/infrastructure/users.repository";
 
 describe('users', () => {
   let app: INestApplication;
@@ -13,11 +14,10 @@ describe('users', () => {
   beforeAll(async () => {
     const result = await initSettings((moduleBuilder) =>
       //override UsersService еще раз
-      moduleBuilder.overrideProvider(UsersService).useFactory({factory: (repo: UsersRepository) => {
-        return new UserServiceMock(repo, {
-          count: 50
-        })
-        }, inject: [UsersRepository]
+      moduleBuilder.overrideProvider(UsersService).useFactory({
+        factory: (repo: UsersRepository, authService: AuthService) => {
+          return new UserServiceMock(repo, authService)
+        }, inject: [UsersRepository, AuthService]
 
       }),
     );
@@ -30,22 +30,22 @@ describe('users', () => {
   });
 
   it('should create user', async () => {
-    const body = { name: 'name111', email: 'email@email.em' };
+    const body = { login: 'name1', password: 'qwerty', email: 'email@email.em' };
 
     const response = await userTestManger.createUser('123', body);
 
-    expect(response.body).toEqual({ ...body, id: expect.any(String) });
+    expect(response.body).toEqual({ login: body.login, email: body.email, id: expect.any(String), createdAt: expect.any(String) });
   });
 
-  it('should get user', async () => {
-    const body = { name: 'name2', email: 'email2@email.em' };
+  it('should get users', async () => {
+    const body = { login: 'name2', password: 'qwerty', email: 'email2@email.em' };
 
     const createUserResponse = await userTestManger.createUser('123', body);
 
     const getUserResponse = await request(app.getHttpServer())
-      .get(`/api/users/${createUserResponse.body.id}`)
+      .get(`/api/users`)
       .expect(200);
 
-    expect(createUserResponse.body).toEqual(getUserResponse.body);
+    expect(getUserResponse.body.totalCount).toBe(2);
   });
 });

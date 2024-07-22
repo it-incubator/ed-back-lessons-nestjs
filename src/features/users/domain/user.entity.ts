@@ -1,44 +1,38 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { randomUUID } from 'crypto';
-
-export type UserDocument = HydratedDocument<User>;
-
-export type UserModelType = Model<UserDocument> & typeof statics;
 
 @Schema()
 export class User {
-  @Prop()
-  name: string;
+  @Prop({ type: String, required: true })
+  login: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
+  passwordHash: string;
+
+  @Prop({ type: String, required: true })
   email: string;
 
-  @Prop()
+  @Prop({ type: Date, default: new Date() })
   createdAt: Date;
 
-  updateUser(name: string) {
-    this.name = name;
-  }
-
-  static createUser(name: string, email: string | null) {
-    const user = new this();
-
-    user.name = name;
-    user.email = email ?? `${randomUUID()}_${name}@it-incubator.io`;
-
-    return user;
-  }
+  /*  static createUser(login: string, email: string | null) {
+        const user = new this();
+        user.login = login;
+        user.email = email ?? `${randomUUID()}_${login}@it-incubator.io`;
+        return user;
+    }
+    getLogin() {
+        return this.login;
+    }*/
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.loadClass(User);
 
-UserSchema.methods = {
-  updateUser: User.prototype.updateUser,
-};
+// Types
+export type UserDocument = HydratedDocument<User>;
+type UserModelStaticType = {
+  createUser: (name: string, email: string | null) => UserDocument
+}
 
-const statics = {
-  createUser: User.createUser,
-};
-
-UserSchema.statics = statics;
+export type UserModelType = Model<UserDocument> //& UserModelStaticType;
