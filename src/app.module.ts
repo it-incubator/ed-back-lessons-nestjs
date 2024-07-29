@@ -1,82 +1,68 @@
-import {MiddlewareConsumer, Module, NestModule, Provider,} from '@nestjs/common';
-import {MongooseModule} from '@nestjs/mongoose';
-import {UsersRepository} from './features/users/infrastructure/users.repository';
-import {UsersService} from './features/users/application/users.service';
-import {UsersQueryRepository} from './features/users/infrastructure/users.query-repository';
-import {User, UserSchema} from './features/users/domain/user.entity';
-import {UsersController} from './features/users/api/users.controller';
-import {LoggerMiddleware} from './common/middlewares/logger.middleware';
-import {NameIsExistConstraint} from './common/decorators/validate/name-is-exist.decorator';
-import {ConfigModule, ConfigService} from '@nestjs/config';
-import configuration, {ConfigurationType, validate} from './settings/env/configuration';
-import {CqrsModule} from '@nestjs/cqrs';
-import {
-  UserCreatedEventHandler,
-  UserCreatedEventHandler2,
-} from './features/users/application/events/handlers/user-created.event-handler';
-import {VeryBigCalculateQuery} from './features/users/infrastructure/queries/very-big-calculate';
-import {CreateUserUseCase} from './features/users/application/usecases/create-user.usecase';
-import {Environments} from "./settings/env/env-settings";
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { EmailIsExistConstraint } from './common/decorators/validate/email-is-exist.decorator';
+import { LoginIsExistConstraint } from './common/decorators/validate/login-is-exist.decorator';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { AuthService } from './features/auth/application/auth.service';
+import { UsersController } from './features/users/api/users.controller';
 
-const usersProviders: Provider[] = [
-    UsersRepository,
-    UsersService,
-    UsersQueryRepository,
-    CreateUserUseCase,
-    VeryBigCalculateQuery,
-    UserCreatedEventHandler,
-    UserCreatedEventHandler2,
-];
+import { UsersService } from './features/users/application/users.service';
+import { User, UserSchema } from './features/users/domain/user.entity';
+import { UsersQueryRepository } from './features/users/infrastructure/users.query-repository';
+import { UsersRepository } from './features/users/infrastructure/users.repository';
+import { AppSettings, appSettings } from './settings/app-settings';
 
 @Module({
     // Регистрация модулей
     imports: [
-        CqrsModule,
-        ConfigModule.forRoot({
-            isGlobal: true,
-            load: [configuration],
-            validate: validate,
-            ignoreEnvFile:
-                process.env.ENV !== Environments.DEVELOPMENT && process.env.ENV !== Environments.TEST,
-            envFilePath: ['.env.development', '.env']
-        }),
+        //CqrsModule,
+        // ConfigModule.forRoot({
+        //     isGlobal: true,
+        //     load: [configuration],
+        //     validate: validate,
+        //     ignoreEnvFile:
+        //         process.env.ENV !== Environments.DEVELOPMENT && process.env.ENV !== Environments.TEST,
+        //     envFilePath: ['.env.development', '.env']
+        // }),
 
         // work with nest ConfigModule
-        MongooseModule.forRootAsync({
-            useFactory: (configService: ConfigService<ConfigurationType>) => {
-                const environmentSettings = configService.get('environmentSettings', {
-                    infer: true,
-                });
-                const databaseSettings = configService.get('databaseSettings', {
-                    infer: true,
-                });
+        // MongooseModule.forRootAsync({
+        //     useFactory: (configService: ConfigService<ConfigurationType>) => {
+        //         const environmentSettings = configService.get('environmentSettings', {
+        //             infer: true,
+        //         });
+        //         const databaseSettings = configService.get('databaseSettings', {
+        //             infer: true,
+        //         });
 
-                const uri = environmentSettings.isTesting
-                    ? databaseSettings.DB_TEST_CONNECTION_URI
-                    : databaseSettings.DB_DEVELOPMENT_CONNECTION_URI;
-                console.log(uri);
+        //         const uri = environmentSettings.isTesting
+        //             ? databaseSettings.DB_TEST_CONNECTION_URI
+        //             : databaseSettings.DB_DEVELOPMENT_CONNECTION_URI;
+        //         console.log(uri);
 
-                return {
-                    uri: uri,
-                };
-            },
-            inject: [ConfigService],
-        }),
-
-        /*      // custom appSettings
-                  MongooseModule.forRoot(appSettings.env.isTesting()
-                      ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
-                      : appSettings.api.MONGO_CONNECTION_URI),*/
-        MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
+        //         return {
+        //             uri: uri,
+        //         };
+        //     },
+        //     inject: [ConfigService],
+        // }),
+        MongooseModule.forRoot(appSettings.env.isTesting()
+            ? appSettings.api.MONGO_CONNECTION_URI_FOR_TESTS
+            : appSettings.api.MONGO_CONNECTION_URI),
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     ],
     // Регистрация провайдеров
     providers: [
-        ...usersProviders,
-        NameIsExistConstraint,
-        /* {
-                    provide: UsersService,
-                    useClass: UsersService,
-                },*/
+        UsersRepository,
+        UsersService,
+        UsersQueryRepository,
+        LoginIsExistConstraint,
+        EmailIsExistConstraint,
+        AuthService,
+        {
+            provide: AppSettings,
+            useClass: AppSettings,
+        },
         /*{
                     provide: UsersService,
                     useValue: {method: () => {}},

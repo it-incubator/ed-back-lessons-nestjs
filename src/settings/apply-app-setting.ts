@@ -1,11 +1,8 @@
 import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { useContainer } from 'class-validator';
+import { AppModule } from '../app.module';
 import { HttpExceptionFilter } from '../common/exception-filters/http-exception-filter';
 import { LoggerMiddlewareFunc } from '../common/middlewares/logger.middleware';
-import { AppModule } from '../app.module';
-import { useContainer } from 'class-validator';
-import { ConfigService } from '@nestjs/config';
-import {ConfigurationType} from "./env/configuration";
 
 // Префикс нашего приложения (http://site.com/api)
 const APP_PREFIX = '/api';
@@ -47,24 +44,24 @@ const setAppPrefix = (app: INestApplication) => {
 };
 
 const setSwagger = (app: INestApplication) => {
-  const config = app.get(ConfigService<ConfigurationType, true>);
-  const environmentSettings = config.get('environmentSettings', {
-    infer: true,
-  });
-  if (!environmentSettings.isProduction) {
-    const swaggerPath = APP_PREFIX + '/swagger-doc';
+  // const config = app.get(ConfigService<ConfigurationType, true>);
+  // const environmentSettings = config.get('environmentSettings', {
+  //   infer: true,
+  // });
+  // if (!environmentSettings.isProduction) {
+  //   const swaggerPath = APP_PREFIX + '/swagger-doc';
 
-    const config = new DocumentBuilder()
-      .setTitle('BLOGGER API')
-      .addBearerAuth()
-      .setVersion('1.0')
-      .build();
+  //   const config = new DocumentBuilder()
+  //     .setTitle('BLOGGER API')
+  //     .addBearerAuth()
+  //     .setVersion('1.0')
+  //     .build();
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup(swaggerPath, app, document, {
-      customSiteTitle: 'Blogger Swagger',
-    });
-  }
+  //   const document = SwaggerModule.createDocument(app, config);
+  //   SwaggerModule.setup(swaggerPath, app, document, {
+  //     customSiteTitle: 'Blogger Swagger',
+  //   });
+  // }
 };
 
 const setAppPipes = (app: INestApplication) => {

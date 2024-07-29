@@ -1,17 +1,25 @@
-import { IsString, Length } from 'class-validator';
-import { Trim } from '../../../../../common/decorators/transform/trim';
-import { IsOptionalEmail } from '../../../../../common/decorators/validate/is-optional-email';
-import { NameIsExist } from '../../../../../common/decorators/validate/name-is-exist.decorator';
+import { IsEmail, IsString, Length } from "class-validator";
+import { Trim } from "src/common/decorators/transform/trim";
+import { EmailIsExist } from "../../../../../common/decorators/validate/email-is-exist.decorator";
+import { LoginIsExist } from "../../../../../common/decorators/validate/login-is-exist.decorator";
 
 // Доступные декораторы
 // https://github.com/typestack/class-validator?tab=readme-ov-file#validation-decorators
 export class UserCreateModel {
-  @Trim()
   @IsString()
-  @Length(5, 20, { message: 'Length not correct' })
-  @NameIsExist()
-  name: string;
+  @Trim()
+  @Length(3, 10)
+  @LoginIsExist()
+  login: string;
 
-  @IsOptionalEmail()
+  @IsString()
+  @Trim()
+  @Length(6, 20)
+  password: string;
+
+  @IsString()
+  @Trim()
+  @IsEmail()
+  @EmailIsExist()
   email: string;
 }
