@@ -1,37 +1,12 @@
-import {Module, Provider,} from '@nestjs/common';
-import {MongooseModule} from '@nestjs/mongoose';
-import {AppSettings, appSettings} from './settings/app-settings';
-import {UsersRepository} from './features/users/infrastructure/users.repository';
-import {UsersService} from './features/users/application/users.service';
-import {UsersQueryRepository} from './features/users/infrastructure/users.query-repository';
-import {User, UserSchema} from './features/users/domain/user.entity';
-import {UsersController} from './features/users/api/users.controller';
-import {AuthService} from "./features/auth/application/auth.service";
-
-const usersProviders: Provider[] = [
-    UsersRepository,
-    UsersService,
-    UsersQueryRepository,
-];
+import { Module } from '@nestjs/common';
 
 @Module({
     // Регистрация модулей
-    imports: [
-        MongooseModule.forRoot(appSettings.api.MONGO_CONNECTION_URI),
-        MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
-    ],
+    imports: [],
     // Регистрация провайдеров
-    providers: [
-        ...usersProviders,
-        AuthService,
-        {
-            provide: AppSettings,
-            useValue: appSettings,
-
-        },
-    ],
+    providers: [],
     // Регистрация контроллеров
-    controllers: [UsersController],
+    controllers: [],
 })
 export class AppModule {
 }
