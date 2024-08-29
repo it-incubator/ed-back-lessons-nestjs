@@ -5,15 +5,19 @@ import { UsersRepository } from '../infrastructure/users.repository';
 // Для провайдера всегда необходимо применять декоратор @Injectable() и регистрировать в модуле
 @Injectable()
 export class UsersService {
-
   constructor(
     private readonly usersRepository: UsersRepository,
-    private readonly authService: AuthService
-  ) {
-  }
+    private readonly authService: AuthService,
+  ) {}
 
-  async create(login: string, password: string, email: string): Promise<string> {
-    const generatedPasswordHash = await this.authService.generatePasswordHash(password);
+  async create(
+    login: string,
+    password: string,
+    email: string,
+  ): Promise<string> {
+    const generatedPasswordHash = await this.authService.generatePasswordHash(
+      password,
+    );
 
     const newUser: any = {
       login: login,
@@ -30,9 +34,8 @@ export class UsersService {
   async delete(id: string): Promise<boolean> {
     return this.usersRepository.delete(id);
   }
-
 }
 
 export type UsersServiceSettings = {
   count: number;
-}
+};
