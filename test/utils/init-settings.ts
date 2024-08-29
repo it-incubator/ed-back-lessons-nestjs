@@ -7,7 +7,7 @@ import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { deleteAllData } from './delete-all-data';
 import { UsersTestManager } from './users-test-manager';
-import configuration from '../../src/settings/configuration';
+import configuration from '../../src/settings/env/configuration';
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder, если хотим изменить настройку тестового модуля
