@@ -17,11 +17,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
 
     if (status === HttpStatus.BAD_REQUEST) {
-      const errorsResponse = {
+      //TODO: fix types
+      const errorsResponse: {
+        errorsMessages: {}[];
+      } = {
         errorsMessages: [],
       };
 
-      const responseBody: any = exception.getResponse();
+      //@ts-ignore
+      //TODO: fix type
+      const responseBody: { message: string } = exception.getResponse();
 
       if (Array.isArray(responseBody.message)) {
         responseBody.message.forEach((e) =>

@@ -47,7 +47,7 @@ const usersProviders: Provider[] = [
       ignoreEnvFile:
         process.env.ENV !== Environments.DEVELOPMENT &&
         process.env.ENV !== Environments.TEST,
-      envFilePath: ['.env.development', '.env'],
+      envFilePath: ['.env.development.local', '.env.development', '.env'],
     }),
 
     // work with nest ConfigModule
@@ -55,14 +55,12 @@ const usersProviders: Provider[] = [
       useFactory: (configService: ConfigService<ConfigurationType>) => {
         const environmentSettings = configService.get('environmentSettings', {
           infer: true,
-        });
+        })!;
         const databaseSettings = configService.get('databaseSettings', {
           infer: true,
-        });
+        })!;
 
-        const uri = environmentSettings.isTesting
-          ? databaseSettings.DB_TEST_CONNECTION_URI
-          : databaseSettings.DB_DEVELOPMENT_CONNECTION_URI;
+        const uri = databaseSettings.DB_URL;
         console.log(uri);
 
         return {

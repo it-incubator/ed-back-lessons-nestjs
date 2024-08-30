@@ -1,11 +1,15 @@
-import { BadRequestException, INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '../common/exception-filters/http-exception-filter';
 import { LoggerMiddlewareFunc } from '../common/middlewares/logger.middleware';
 import { AppModule } from '../app.module';
 import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
-import {ConfigurationType} from "./env/configuration";
+import { ConfigurationType } from './env/configuration';
 
 // Префикс нашего приложения (http://site.com/api)
 const APP_PREFIX = '/api';
@@ -76,13 +80,13 @@ const setAppPipes = (app: INestApplication) => {
       stopAtFirstError: true,
       // Перехватываем ошибку, кастомизируем её и выкидываем 400 с собранными данными
       exceptionFactory: (errors) => {
-        const customErrors = [];
+        const customErrors: { key: string; message: string }[] = [];
 
         errors.forEach((e) => {
-          const constraintKeys = Object.keys(e.constraints);
+          const constraintKeys = Object.keys(e.constraints!);
 
           constraintKeys.forEach((cKey) => {
-            const msg = e.constraints[cKey];
+            const msg = e.constraints![cKey];
 
             customErrors.push({ key: e.property, message: msg });
           });
